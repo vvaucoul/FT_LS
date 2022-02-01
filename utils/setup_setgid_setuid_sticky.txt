@@ -1,0 +1,144 @@
+What is Setuid?
+Setuid is a Linux file permission setting that allows a user to execute that file or program with the permission of the owner of that file. This is primarily used to elevate the privileges of the current user. If a file is “setuid” and is owned by the user “root” then a user that has the ability to execute that program will do so as the user root instead of themselves. The most common example of this in Linux is ‘sudo’. In this example, the user ‘test’ located the executable ‘sudo’ and did a full listing of it with the ‘ls -l’ command.
+
+root@host [~]# id
+uid=1002(test) gid=1002(test) groups=1002(test)
+
+root@host [~]# which sudo
+/usr/bin/sudo
+
+root@host [~]# ls -l /usr/bin/sudo
+-rwsr-xr-x 1 root root 136808 Jan 31 13:37 /usr/bin/sudo
+
+root@host [~]#
+If you look at the permissions level of the ‘sudo’ executable, you can see the ‘s’ in the permissions for the user where normally there would be an ‘x’.  Also, notice that this file is owned by the user ‘root’ (the super-user) and that the file is executable by the world (the last ‘x’ in the permissions).  This indicates that when a user executes this program, the operating system will execute that file not as the user ‘test’, but as the user ‘root'. In the matter of using the ‘sudo’ command, this allows a normal user to perform elevated system functions without having to log in as the root user.
+
+How Do I Set Up Setuid?
+Setting the ‘setuid’ permission is as simple as setting any other permission in Linux. The file ownership is modified using the command. An example command to set this would be as follows.
+
+root@host [~]# chmod u+s <filename>
+In this example, we will create a file called ‘myfile’ using the command ‘touch’ and then we will examine its permissions with the ‘ls -l' command.
+
+root@host [~]# touch myfile
+root@host [~]# ls -l myfile
+-rw-rw-r-- 1 test test 0 Mar 2 17:59 myfile
+root@host [~]#
+Notice that the file does not have the execute permissions for user, group, or world. We will add the setuid bit as seen below.
+
+root@host [~]# chmod u+s myfile
+root@host [~]# ls -l myfile
+-rwSrw-r-- 1 test test 0 Mar 2 17:59 myfile
+root@host [~]#
+This output looks a little different from what we were expecting. The lowercase ‘s’ we were looking for is the now a capital ‘S.’ This signifies that the setuid IS set, but the user that owns the file does not have execute permissions. We can add that permission using the ‘chmod u+x’ command.
+
+root@host [~]#  chmod u+x myfile
+root@host [~]#  ls -l
+total 0
+-rwsrw-r-- 1 test test 0 Mar 2 17:59 myfile
+root@host [~]#
+What is Setgid?
+Setgid, when used on files, is very similar to setuid. A process, when executed, will run as the group that owns the file. A typical example of a file that uses this is the ‘crontab’ command.
+
+root@host [~]#  which crontab
+/usr/bin/crontab
+root@host [~]#  ls -l /usr/bin/crontab
+-rwxr-sr-x 1 root crontab 36080 Apr 5 2016 /usr/bin/crontab
+root@host [~]#
+How Do I Set Up Setgid?
+Similar to ‘setuid,’ ‘setgid’ is inserted with the ‘chmod g+s’ command. Let's create a new file called ‘myfile2’.
+
+root@host [~]#  touch myfile2
+root@host [~]#  ls -l myfile2
+-rw-rw-r-- 1 test test 0 Mar 2 19:30 myfile2
+root@host [~]#
+Now we will run the 'chmod g+s' command and review the results.
+
+root@host [~]#  chmod g+s myfile2
+root@host [~]#  ls -l myfile2
+-rw-rwSr-- 1 test test 0 Mar 2 19:30 myfile2
+root@host [~]#
+Again we see the capital ‘S’ is set, but we can modify that.
+
+root@host [~]#  chmod g+x myfile2
+root@host [~]#  ls -l
+total 0
+-rwsrw-r-- 1 test test 0 Mar 2 17:59 myfile
+-rw-rwsr-- 1 test test 0 Mar 2 19:30 myfile2
+root@host [~]#
+Setgid on Directories
+Applying the setgid permission on a directory has as different behavior. A directory that has ‘setgid’ on it will cause all files that are created in that directory to be owned by the group of the directory as opposed to the group of the owner. First, we create a directory.
+
+root@host [~]#  mkdir mydir
+root@host [~]#  ls -ld mydir
+drwxrwxr-x 2 test test 4096 Mar 2 19:36 mydir
+root@host [~]#
+Then we change the group ownership of the directory by using the 'chgrp' command, and then we can add the ‘setgid’ permission like before.
+
+root@host [~]#  chgrp test2 mydir/
+root@host [~]#  chmod g+s mydir
+root@host [~]#  ls -ld mydir/
+drwxrwsr-x 2 test test2 4096 Mar 2 19:36 mydir/
+root@host [~]#
+Let's test it out by creating a file in that directory. All other files in this tutorial were created this way and had ‘test’ as the group. Because ‘setgid’ is set on the directory and it is owned by group ‘test2’, this file will get ‘test2’ as its group.
+
+root@host [~]#  touch mydir/myfile3
+root@host [~]#  ls -l mydir/myfile3
+-rw-rw-r-- 1 test test2 0 Mar 2 19:59 mydir/myfile3
+root@host [~]#
+What Is A Sticky Bit?
+The final special permission is the ‘sticky bit.’ When this is set on a directory, the files in that directory can only be removed by the owner. A typical use of this is ‘/tmp/.’ The /tmp directory can be written to by any user, but other users cannot delete the files of others.
+
+root@host [~]#  ls -ld /tmp
+drwxrwxrwt 8 root root 4096 Mar 2 20:17 /tmp
+root@host [~]#
+Notice that /tmp can be written to by everyone but has the ‘t’ in place of the ‘x’ at the end of the permissions list. This means it has the sticky bit.
+
+How Do I Set Up A Sticky Bit?
+The sticky bit is set with ‘chmod +t’ command.
+
+root@host [~]#  mkdir mydir2
+root@host [~]#  ls -ld mydir2
+drwxrwxr-x 2 test test 4096 Mar 2 20:17 mydir2
+root@host [~]#  chmod +t mydir2
+root@host [~]#  ls -ld mydir2
+drwxrwxr-t 2 test test 4096 Mar 2 20:17 mydir2
+root@host [~]#
+
+Setting Special Permissions With Number Notation
+You may remember from the definitions above that permissions can be set with a series of three numbers. The numbers represent the permissions for owner, group, and world, respectively. To determine the number you want to set, you can use x=1, w=2, and r=4. You add the numbers together to get the permission number. If we wanted to have read, write, and execute permissions, we would use 7. Read and write would be 6. Just read is 4. An example to set the file to read, write, and execute for owner, read and execute for group and world would look like this:
+
+root@host [~]#  chmod 755 myfile
+root@host [~]#  ls -l myfile
+-rwxr-xr-x 1 test test 0 Mar 2 17:59 myfile
+root@host [~]#
+For the special permissions, you prepend these numbers with another number where 4 is setuid, 2 is setgid, and 1 is the sticky bit. The following commands are all the same (assuming the file has the permissions we set above).
+
+root@host [~]#  chmod 4755 myfile
+root@host [~]#  chmod u+s myfile
+root@host [~]#  ls -l myfile
+-rwsr-xr-x 1 test test 0 Mar 2 17:59 myfile
+root@host [~]#
+
+root@host [~]#  chmod 2755 myfile
+root@host [~]#  chmod g+s myfile
+root@host [~]#  ls -l myfile
+-rwxr-sr-x 1 test test 0 Mar 2 17:59 myfile
+root@host [~]#
+
+root@host [~]#  chmod 1755 mydir
+root@host [~]#  chmod +t mydir
+root@host [~]#  ls -ld mydir
+drwxr-sr-t 2 test test2 4096 Mar 2 19:59 mydir
+root@host [~]#
+Removing Special Permissions
+To remove special permissions, we can use the same chmod commands with a ‘-’ instead of a ‘+.’
+
+root@host [~]#  chmod u-s myfile
+root@host [~]#  chmod g-s mydir
+root@host [~]#  chmod -t mydir2
+root@host [~]#  ls -l
+total 8
+drwxr-xr-x 2 test test2 4096 Mar 2 19:59 mydir
+drwxrwxr-x 2 test test 4096 Mar 2 20:17 mydir2
+-rwxr-xr-t 1 test test 0 Mar 2 17:59 myfile
+root@host [~]#
