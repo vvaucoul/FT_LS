@@ -7,7 +7,7 @@
 ### Projet
 
 L'objectif du projet est de recréer la commande système 'LS'.
-Le projet n'est pas très compliqué mais il est intéréssant du fait que l'on doit se renseigner et apprendre pleins de choses sur le système Linux.
+Le projet n'est pas très compliqué mais il est intéressant du fait que l'on doit se renseigner et apprendre pleins de choses sur le système Linux.
 
 Liste des flags obligatoires:
 
