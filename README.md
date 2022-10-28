@@ -1,15 +1,11 @@
 # FT_LS
 
-- ![alt text](https://img.shields.io/badge/Note-110%2F100-lightgreen)
-- ![alt text](https://img.shields.io/badge/Dur%C3%A9e%20du%20projet-1%20semaine-orange)
-- ![alt text](https://img.shields.io/badge/XP-4200-red)
-
 ### Projet
 
-L'objectif du projet est de recréer la commande système 'LS'.
-Le projet n'est pas très compliqué mais il est intéressant du fait que l'on doit se renseigner et apprendre pleins de choses sur le système Linux.
+The goal of the project was to recreate the 'LS' system command.
+The project is not very complicated but it is interesting because we have to learn a lot about the Linux system.
 
-Liste des flags obligatoires:
+Mandatory flags:
 
 - L
 - R
@@ -17,13 +13,35 @@ Liste des flags obligatoires:
 - t
 - a
 
-Liste des flags bonus:
+Bonus flags:
 
 - u
 - f
 - g
 - d
 - G
+
+## Usage
+
+- Clone Repository
+```bash
+git clone https://github.com/vvaucoul/FT_LS && cd FT_LS
+```
+
+- Compilation
+```bash
+make
+```
+
+- Setup tests
+```bash
+./utils/init_tests.sh
+```
+
+- Launch ft_ls
+```bash
+./ft_ls [args]
+```
 
 # Ressources
 
