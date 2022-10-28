@@ -48,4 +48,4 @@ make
 - [Inodes](https://fr.wikipedia.org/wiki/N%C5%93ud_d%27index)
 - [Man Inodes](https://man7.org/linux/man-pages/man7/inode.7.html)
 - [Description complète](https://www.malekal.com/la-commande-ls-linux-utilisation-et-exemples/)
-- [listes chainées](https://www.geeksforgeeks.org/data-structures/linked-list/)
+- [linked List](https://www.geeksforgeeks.org/data-structures/linked-list/)
