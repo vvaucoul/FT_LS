@@ -2,7 +2,7 @@
 
 ### Projet
 
-The goal of the project was to recreate the 'LS' system command.
+The goal of the project was to recreate the 'LS' system command.<br>
 The project is not very complicated but it is interesting because we have to learn a lot about the Linux system.
 
 Mandatory flags:
