@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vintz <vintz@student.42.fr>                +#+  +:+       +#+         #
+#    By: vvaucoul <vvaucoul@student.42.Fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/14 23:49:27 by vvaucoul          #+#    #+#              #
-#    Updated: 2022/01/27 14:59:11 by vintz            ###   ########.fr        #
+#    Updated: 2022/10/28 20:53:36 by vvaucoul         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,7 +46,7 @@ OBJS			=	$(SRCS:.c=.o)
 PRINT_COMP		=	printf "\r$(_BOLD)$(_WHITE)- $(_BOLD)$(_CYAN)[%s]\r\t\t\t\t $(_BOLD)$(_WHITE)[✓]\n"
 
 %.o : %.c
-	@echo -n "\r                                                               "
+	@printf "\r                                                               "
 	@$(PRINT_COMP) $@
 	@$(CC) $(CFLAGS) -I. -c $< -o ${<:.c=.o}
 
@@ -92,7 +92,7 @@ all:			$(NAME)
 
 $(NAME): $(OBJS)
 	@$(CC) $(OBJS) $(CFLAGS) -o $(NAME)
-	@echo "\n\t$(_BOLD)$(_WHITE)- $(_GREEN)FT_LS COMPILED ! $(_BOLD)$(_WHITE)-$(NOC)"
+	@printf "\n\t$(_BOLD)$(_WHITE)- $(_GREEN)FT_LS COMPILED ! $(_BOLD)$(_WHITE)-$(NOC)\n"
 clean:
 	@$(RM) -r $(OBJS)
 
